@@ -1,3 +1,15 @@
+# 1.0.0 (2026-05-13)
+
+
+### Bug Fixes
+
+* use npx -p typescript tsc --noEmit in CI ([276f5cf](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/commit/276f5cfdc68a47a419c69ed25b1b557d2ce9e477))
+
+
+### Features
+
+* initial release - cookie consent banner plugin for EmDash CMS ([0d8470e](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/commit/0d8470e8450c7550aaf529814a69ad768d75e086))
+
 # Changelog
 
 All notable changes to this project are documented in this file.
