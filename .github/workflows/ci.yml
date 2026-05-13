@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npx -p typescript tsc --noEmit
 
   test:
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npx vitest run
 
   validate-package:
@@ -38,7 +38,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: |
           node -e "
             const p = require('./package.json');
