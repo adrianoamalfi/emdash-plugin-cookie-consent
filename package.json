@@ -1,0 +1,50 @@
+{
+  "name": "emdash-plugin-cookie-consent",
+  "version": "1.0.0",
+  "description": "A fully customizable cookie consent banner plugin for EmDash CMS with category-level opt-in, theming, and an admin settings panel.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Adriano Amalfi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrianoamalfi/emdash-plugin-cookie-consent"
+  },
+  "keywords": [
+    "emdash",
+    "emdash-plugin",
+    "cookie-consent",
+    "cookies",
+    "gdpr",
+    "privacy",
+    "cms"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./sandbox": "./src/sandbox-entry.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "version": "node -p \"require('./package.json').version\""
+  },
+  "release": {
+    "branches": ["main"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
+  },
+  "peerDependencies": {
+    "emdash": "^0.12.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^24.2.3",
+    "vitest": "^3.1.2"
+  }
+}
