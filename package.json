@@ -4,7 +4,7 @@
   "description": "A fully customizable cookie consent banner plugin for EmDash CMS with category-level opt-in, theming, and an admin settings panel.",
   "type": "module",
   "license": "MIT",
-  "author": "Adriano Amalfi",
+  "author": "Adriano Amalfi <adrianoamalfi@gmail.com> (https://adrianoamalfi.com)",
   "repository": {
     "type": "git",
     "url": "https://github.com/adrianoamalfi/emdash-plugin-cookie-consent"
