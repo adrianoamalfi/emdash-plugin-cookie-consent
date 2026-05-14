@@ -16,6 +16,11 @@ A fully customizable cookie consent banner plugin for [EmDash CMS](https://emdas
 - **Mobile responsive** — Collapses to stacked layout on small screens
 - **No external dependencies** — Zero runtime deps, all CSS/JS inlined (~5 KB per page)
 
+## Prerequisites
+
+- EmDash CMS `^0.12.0`
+- Your base layout must include `<EmDashHead />` and `<EmDashBodyEnd />` — the plugin injects CSS and scripts via these hooks. Without them the banner won't render.
+
 ## Installation
 
 ```bash
@@ -28,17 +33,20 @@ Register the plugin in `astro.config.mjs`:
 
 ```ts
 import { cookieConsentPlugin } from "emdash-plugin-cookie-consent";
+import emdash from "emdash/astro";
+import { defineConfig } from "astro/config";
 
 export default defineConfig({
   integrations: [
     emdash({
       plugins: [cookieConsentPlugin()],
+      // database and storage remain unchanged
     }),
   ],
 });
 ```
 
-The banner appears automatically on all pages using `EmDashHead` and `EmDashBodyEnd`.
+The banner appears automatically on all public pages — no per-page code required.
 
 ## How It Works
 
