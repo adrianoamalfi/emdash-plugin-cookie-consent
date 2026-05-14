@@ -100,7 +100,7 @@ interface ConsentState {
 | YouTube / Vimeo embeds | `functional` | Click-to-load or conditional iframe |
 | Stripe / payment | `necessary` | Always load |
 
-See the [full integration guide](#) for detailed examples with GA4, GTM, Facebook Pixel, and YouTube.
+See the integration examples above for GA4, GTM, Facebook Pixel, and YouTube.
 
 ## Development
 
