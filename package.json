@@ -1,6 +1,6 @@
 {
   "name": "emdash-plugin-cookie-consent",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A fully customizable cookie consent banner plugin for EmDash CMS with category-level opt-in, theming, and an admin settings panel.",
   "type": "module",
   "license": "MIT",
