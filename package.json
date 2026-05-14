@@ -28,12 +28,17 @@
     "test:watch": "vitest",
     "version": "node -p \"require('./package.json').version\""
   },
+  "files": ["src"],
+  "publishConfig": {
+    "access": "public"
+  },
   "release": {
     "branches": ["main"],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
+      "@semantic-release/npm",
       "@semantic-release/github",
       "@semantic-release/git"
     ]
@@ -45,6 +50,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "semantic-release": "^24.2.3",
+    "typescript": "^5.8.0",
     "vitest": "^3.1.2"
   }
 }
