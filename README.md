@@ -1,5 +1,9 @@
 # emdash-plugin-cookie-consent
 
+[![CI](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/actions/workflows/ci.yml/badge.svg)](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/actions/workflows/ci.yml)
+[![Security](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/actions/workflows/security.yml/badge.svg)](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/actions/workflows/security.yml)
+[![npm version](https://img.shields.io/npm/v/emdash-plugin-cookie-consent)](https://www.npmjs.com/package/emdash-plugin-cookie-consent)
+
 A fully customizable cookie consent banner plugin for [EmDash CMS](https://emdashcms.com). Features category-level opt-in (necessary, functional, analytics, marketing), configurable theming, an admin settings panel, and privacy-policy link support.
 
 ## Features
