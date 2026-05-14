@@ -3,7 +3,7 @@ import type { PluginDescriptor } from "emdash";
 export function cookieConsentPlugin(): PluginDescriptor {
   return {
     id: "cookie-consent",
-    version: "0.1.0",
+    version: "1.0.0",
     format: "standard",
     entrypoint: "emdash-plugin-cookie-consent/sandbox",
     options: {},
