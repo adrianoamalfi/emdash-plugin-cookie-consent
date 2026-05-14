@@ -74,33 +74,33 @@ describe("Banner functions", () => {
     expect(source).toContain("if(b.isConnected)b.classList.add");
   });
 
-  it("sets cookie with SameSite=Lax in C()", () => {
+  it("sets cookie with SameSite=Lax and Secure in C()", () => {
     expect(source).toContain("365*864e5");
-    expect(source).toContain("SameSite=Lax");
+    expect(source).toContain("SameSite=Lax;Secure");
     expect(source).toContain("encodeURIComponent(JSON.stringify(v))");
   });
 });
 
 describe("Consent values", () => {
   it("__ccAccept: all true", () => {
-    const m = source.match(/__ccAccept=function\(\)\{C\(\{([^}]+)\}\)/);
-    expect(m).toBeTruthy();
-    expect(m![1]).toMatch(/necessary:true/);
-    expect(m![1]).toMatch(/functional:true/);
-    expect(m![1]).toMatch(/analytics:true/);
-    expect(m![1]).toMatch(/marketing:true/);
+    expect(source).toMatch(/__ccAccept=function/);
+    expect(source).toContain("allCatIds.map");
+    // All category IDs from CATEGORIES are mapped to true in the template literal
+    for (const id of ["necessary", "functional", "analytics", "marketing"]) {
+      expect(source).toContain(`id: "${id}"`);
+    }
   });
 
   it("__ccReject: non-necessary false", () => {
-    const m = source.match(/__ccReject=function\(\)\{C\(\{([^}]+)\}\)/);
-    expect(m).toBeTruthy();
-    expect(m![1]).toMatch(/functional:false/);
-    expect(m![1]).toMatch(/analytics:false/);
-    expect(m![1]).toMatch(/marketing:false/);
+    expect(source).toMatch(/__ccReject=function/);
+    expect(source).toContain("requiredCatIds.map");
+    expect(source).toContain("optionalCatIds.map");
+    // Optional cats map to false
+    expect(source).toContain("${id}:false");
   });
 
   it("__ccSave: reads toggles and saves", () => {
-    expect(source).toContain("var q={necessary:true}");
+    expect(source).toContain("requiredCatIds.map");
     expect(source).toContain('document.querySelectorAll(".cc-cat-toggle")');
     expect(source).toContain("q[t.dataset.cat]=t.checked");
     expect(source).toContain("C(q);H()");

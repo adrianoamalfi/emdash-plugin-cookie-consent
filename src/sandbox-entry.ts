@@ -3,7 +3,7 @@ import type { PluginContext } from "emdash";
 
 const SETTINGS_KEY = "settings:all";
 
-const DEFAULTS: Record<string, any> = {
+const DEFAULTS: Settings = {
   enabled: true,
   message: "We use cookies to enhance your experience. Choose which categories you allow.",
   acceptLabel: "Accept All",
@@ -42,7 +42,28 @@ const THEMES: Record<string, { label: string; backgroundColor: string; textColor
   forest: { label: "Forest", backgroundColor: "#052e16", textColor: "#ecfdf5", buttonColor: "#16a34a" },
 };
 
-type Settings = Record<string, any>;
+interface Settings {
+  enabled: boolean;
+  message: string;
+  acceptLabel: string;
+  rejectLabel: string;
+  customizeLabel: string;
+  footerLinkText: string;
+  privacyPolicyUrl: string;
+  theme: string;
+  position: string;
+  backgroundColor: string;
+  textColor: string;
+  buttonColor: string;
+  catNecessaryName: string;
+  catNecessaryDesc: string;
+  catFunctionalName: string;
+  catFunctionalDesc: string;
+  catAnalyticsName: string;
+  catAnalyticsDesc: string;
+  catMarketingName: string;
+  catMarketingDesc: string;
+}
 
 const KEY_MAP: Record<string, string> = {
   enabled: "enabled",
@@ -71,15 +92,19 @@ async function getSettings(ctx: PluginContext): Promise<Settings> {
   const stored = await ctx.kv.get<Record<string, any>>(SETTINGS_KEY);
   const r: Settings = { ...DEFAULTS };
   if (stored) Object.assign(r, stored);
-  if (r.theme && r.theme !== "custom") {
-    const t = THEMES[r.theme];
+  applyThemeDefaults(r);
+  return r;
+}
+
+function applyThemeDefaults(s: Settings): void {
+  if (s.theme && s.theme !== "custom") {
+    const t = THEMES[s.theme];
     if (t) {
-      r.backgroundColor = t.backgroundColor;
-      r.textColor = t.textColor;
-      r.buttonColor = t.buttonColor;
+      s.backgroundColor = t.backgroundColor;
+      s.textColor = t.textColor;
+      s.buttonColor = t.buttonColor;
     }
   }
-  return r;
 }
 
 async function saveSettings(ctx: PluginContext, values: Record<string, any>) {
@@ -87,18 +112,28 @@ async function saveSettings(ctx: PluginContext, values: Record<string, any>) {
   for (const [actionId, settingKey] of Object.entries(KEY_MAP)) {
     if (values[actionId] !== undefined) s[settingKey] = values[actionId];
   }
-  const theme = s.theme;
-  const preset = theme && theme !== "custom" ? THEMES[theme] : null;
-  if (preset) {
-    s.backgroundColor = preset.backgroundColor;
-    s.textColor = preset.textColor;
-    s.buttonColor = preset.buttonColor;
+  applyThemeDefaults(s as Settings);
+  if (s.privacyPolicyUrl && s.privacyPolicyUrl.trim() !== "") {
+    try {
+      const url = new URL(s.privacyPolicyUrl);
+      if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error("Only HTTP and HTTPS URLs are allowed for the privacy policy.");
+      }
+    } catch {
+      throw new Error("Privacy Policy URL must be a valid HTTP or HTTPS URL.");
+    }
+  }
+  const hexColor = /^#[0-9a-fA-F]{3,6}$/;
+  for (const key of ["backgroundColor", "textColor", "buttonColor"]) {
+    if (s[key] && !hexColor.test(s[key])) {
+      throw new Error(`Invalid color format for ${key}. Must be a hex color (e.g. #1a1a2e).`);
+    }
   }
   await ctx.kv.set(SETTINGS_KEY, s);
 }
 
 function h(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
 export default definePlugin({
@@ -166,19 +201,23 @@ export default definePlugin({
         `catch(e){return null}})();`,
       ].join("");
 
+      const allCatIds = CATEGORIES.map(c => c.id);
+      const requiredCatIds = CATEGORIES.filter(c => c.required).map(c => c.id);
+      const optionalCatIds = CATEGORIES.filter(c => !c.required).map(c => c.id);
+
       const bannerJs = [
         `(function(){`,
         `var k="cookie_consent";`,
         `var p=window.__ccConsent;`,
-        `function C(v){window.__ccConsent=v;var e=new Date();e.setTime(e.getTime()+365*864e5);document.cookie=k+"="+encodeURIComponent(JSON.stringify(v))+";path=/;expires="+e.toUTCString()+";SameSite=Lax"}`,
+        `function C(v){window.__ccConsent=v;var e=new Date();e.setTime(e.getTime()+365*864e5);document.cookie=k+"="+encodeURIComponent(JSON.stringify(v))+";path=/;expires="+e.toUTCString()+";SameSite=Lax;Secure"}`,
         `var html=${JSON.stringify(bannerHTML)};`,
         `function B(){var b=document.getElementById("cc-banner");if(!b){b=document.createElement("div");b.id="cc-banner";document.body.appendChild(b)}b.innerHTML=html;var c=window.__ccConsent;if(c){document.querySelectorAll(".cc-cat-toggle").forEach(function(t){if(c[t.dataset.cat]!==undefined)t.checked=c[t.dataset.cat]})}requestAnimationFrame(function(){if(b.isConnected)b.classList.add("cc-show")})}`,
         `function H(){var b=document.getElementById("cc-banner");if(b){b.remove();var e=document.getElementById("cc-reopen");if(e)e.style.display="block"}}`,
         `if(!p)B();`,
-        `window.__ccAccept=function(){C({necessary:true,functional:true,analytics:true,marketing:true});H()};`,
-        `window.__ccReject=function(){C({necessary:true,functional:false,analytics:false,marketing:false});H()};`,
+        `window.__ccAccept=function(){C({${allCatIds.map(id => `${id}:true`).join(",")}});H()};`,
+        `window.__ccReject=function(){C({${requiredCatIds.map(id => `${id}:true`).join(",")},${optionalCatIds.map(id => `${id}:false`).join(",")}});H()};`,
         `window.__ccCustomize=function(){var b=document.getElementById("cc-banner");if(b)b.classList.add("cc-expanded")};`,
-        `window.__ccSave=function(){var q={necessary:true};document.querySelectorAll(".cc-cat-toggle").forEach(function(t){q[t.dataset.cat]=t.checked});C(q);H()};`,
+        `window.__ccSave=function(){var q={${requiredCatIds.map(id => `${id}:true`).join(",")}};document.querySelectorAll(".cc-cat-toggle").forEach(function(t){q[t.dataset.cat]=t.checked});C(q);H()};`,
         `window.__ccShow=function(){var r=document.getElementById("cc-reopen");if(r)r.style.display="none";B()};`,
         `var r=document.createElement("button");r.id="cc-reopen";r.textContent=${JSON.stringify(s.footerLinkText)};r.onclick=function(){window.__ccShow()};r.style.display=p?"block":"none";document.body.appendChild(r);`,
         `})();`,
@@ -194,7 +233,7 @@ export default definePlugin({
 
   routes: {
     admin: {
-      handler: async (routeCtx: any, ctx: PluginContext) => {
+      handler: async (routeCtx: { input: Record<string, unknown>; request: Request }, ctx: PluginContext) => {
         const interaction = routeCtx.input as Record<string, any>;
 
         if (interaction.type === "page_load") {
@@ -210,10 +249,10 @@ export default definePlugin({
                 ...buildForm(await getSettings(ctx)),
               ],
             };
-          } catch (e) {
+          } catch {
             return {
               blocks: [
-                { type: "banner", title: `Failed to save: ${(e as Error).message}`, variant: "error" },
+                { type: "banner", title: "Failed to save settings. Please check your inputs and try again.", variant: "error" },
                 ...buildForm(await getSettings(ctx)),
               ],
             };
