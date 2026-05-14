@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/compare/v1.0.0...v1.0.1) (2026-05-14)
+
+
+### Bug Fixes
+
+* security hardening and type safety improvements for cookie consent plugin ([#12](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/issues/12)) ([68c086f](https://github.com/adrianoamalfi/emdash-plugin-cookie-consent/commit/68c086f541e649e36efb81ebec655260f7d6089d))
+
 # 1.0.0 (2026-05-14)
 
 
