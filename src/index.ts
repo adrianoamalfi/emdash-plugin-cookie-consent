@@ -6,6 +6,7 @@ export function cookieConsentPlugin(): PluginDescriptor {
     version: "1.0.0",
     format: "standard",
     entrypoint: "emdash-plugin-cookie-consent/sandbox",
+    options: {},
     capabilities: ["hooks.page-fragments:register"],
     adminPages: [{ path: "/settings", label: "Cookie Consent", icon: "shield" }],
   };

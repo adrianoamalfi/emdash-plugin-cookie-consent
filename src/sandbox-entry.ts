@@ -103,11 +103,11 @@ function h(s: string): string {
 
 export default definePlugin({
   hooks: {
-    "plugin:install": async (_event: any, ctx: PluginContext) => {
+    "plugin:install": async (_event: unknown, ctx: PluginContext) => {
       await ctx.kv.set(SETTINGS_KEY, { ...DEFAULTS });
     },
 
-    "page:fragments": async (_event: any, ctx: PluginContext) => {
+    "page:fragments": async (_event: unknown, ctx: PluginContext) => {
       const s = await getSettings(ctx);
       if (!s.enabled) return null;
 
