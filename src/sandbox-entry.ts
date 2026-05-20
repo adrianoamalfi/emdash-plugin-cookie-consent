@@ -1,5 +1,4 @@
-import { definePlugin } from "emdash";
-import type { PluginContext } from "emdash";
+import type { SandboxedPlugin, PluginContext } from "emdash/plugin";
 
 const SETTINGS_KEY = "settings:all";
 
@@ -136,13 +135,13 @@ function h(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
-export default definePlugin({
+export default {
   hooks: {
-    "plugin:install": async (_event: unknown, ctx: PluginContext) => {
+    "plugin:install": async (_event, ctx) => {
       await ctx.kv.set(SETTINGS_KEY, { ...DEFAULTS });
     },
 
-    "page:fragments": async (_event: unknown, ctx: PluginContext) => {
+    "page:fragments": async (_event, ctx) => {
       const s = await getSettings(ctx);
       if (!s.enabled) return null;
 
@@ -233,7 +232,7 @@ export default definePlugin({
 
   routes: {
     admin: {
-      handler: async (routeCtx: { input: Record<string, unknown>; request: Request }, ctx: PluginContext) => {
+      handler: async (routeCtx, ctx) => {
         const interaction = routeCtx.input as Record<string, any>;
 
         if (interaction.type === "page_load") {
@@ -263,7 +262,7 @@ export default definePlugin({
       },
     },
   },
-});
+} satisfies SandboxedPlugin;
 
 function buildForm(s: Settings) {
   return [
