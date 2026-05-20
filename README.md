@@ -18,7 +18,7 @@ A fully customizable cookie consent banner plugin for [EmDash CMS](https://emdas
 
 ## Prerequisites
 
-- EmDash CMS `^0.12.0`
+- EmDash CMS `^0.13.0`
 - Your base layout must include `<EmDashHead />` and `<EmDashBodyEnd />` — the plugin injects CSS and scripts via these hooks. Without them the banner won't render.
 
 ## Installation
