@@ -48,12 +48,12 @@
     ]
   },
   "peerDependencies": {
-    "emdash": "^0.13.0"
+    "emdash": "^0.14.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "emdash": "^0.13.0",
+    "emdash": "^0.14.0",
     "semantic-release": "^25.0.3",
     "typescript": "^6.0.3",
     "vitest": "^3.1.2"
