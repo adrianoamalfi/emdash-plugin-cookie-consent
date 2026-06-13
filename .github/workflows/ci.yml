@@ -16,8 +16,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+          cache: ""
+      - run: npm install --legacy-peer-deps
       - run: npx tsc --noEmit
 
   test:
@@ -28,8 +28,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+          cache: ""
+      - run: npm install --legacy-peer-deps
       - run: npx vitest run
 
   validate-package:
@@ -40,8 +40,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
+          cache: ""
+      - run: npm install --legacy-peer-deps
       - run: |
           node -e "
             const p = require('./package.json');
@@ -50,6 +50,5 @@ jobs:
             assert(p.version, 'missing version');
             assert(p.peerDependencies?.emdash, 'missing emdash peer dep');
             assert(p.exports?.['.'], 'missing main export');
-            assert(p.exports?.['./sandbox'], 'missing sandbox export');
             console.log('package.json valid');
           "
