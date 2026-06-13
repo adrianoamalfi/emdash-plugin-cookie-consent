@@ -14,12 +14,12 @@ describe("Plugin structure", () => {
     expect(source).toMatch(/id:\s*["']cookie-consent["']/);
   });
 
-  it("uses standard format", () => {
-    expect(source).toMatch(/format:\s*["']standard["']/);
+  it("uses native format", () => {
+    expect(source).toMatch(/format:\s*["']native["']/);
   });
 
   it("uses bare specifier entrypoint for npm publishing", () => {
-    expect(source).toContain('"emdash-plugin-cookie-consent/sandbox"');
+    expect(source).toContain('"emdash-plugin-cookie-consent"');
   });
 
   it("declares page-fragments capability", () => {
